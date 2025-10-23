@@ -31,7 +31,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.X' # Asegúrate de que 3.X sea una versión válida como '3.10'
 
     - name: Install dependencies
       run: |
@@ -42,11 +42,15 @@ jobs:
       run: |
         sleep 10
 
-    - name: Set up database schema and data
+    - name: Set up database schema
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
 
+    - name: Import CSV data
+      run: |
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -c "\copy datos(id, categoria, valor, fecha) FROM 'datos_agregacion_transformacion.csv' WITH (FORMAT csv, HEADER true);"
 
     - name: Query data
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d exercises -f 02_query_data.sql
+        # OJO: Asegúrate de que el nombre de la BD sea 'test_db' aquí también
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_query_data.sql
