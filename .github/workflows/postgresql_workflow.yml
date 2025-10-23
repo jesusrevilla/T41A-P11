@@ -45,6 +45,15 @@ jobs:
     - name: Set up database schema and data
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
+        
+    - name: Import CSV data
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: datos
+      run: |
+        psql -c "\COPY datos FROM 'datos_agregacion_transformacion.csv' WITH (FORMAT CSV, HEADER);"
 
 
     - name: Query data
