@@ -1,5 +1,6 @@
 import unittest
 import psycopg2
+import os
 
 class TestDatabase(unittest.TestCase):
     def setUp(self):
