@@ -4,4 +4,4 @@ SELECT
     SUM(valor) FILTER (WHERE categoria = 'C') AS suma_C,
     SUM(valor) FILTER (WHERE categoria = 'D') AS suma_D
 FROM
-    ;
+    datos;
