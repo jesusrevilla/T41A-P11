@@ -23,17 +23,14 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'  # Usa una versión específica y estable
+        python-version: '3.9'
     
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Instalar pytest y otras dependencias necesarias
         pip install pytest
-        # Si tienes requirements.txt, también:
+        # Si tienes requirements.txt:
         # pip install -r requirements.txt
-        # Si no tienes requirements.txt, instala tus dependencias directamente:
-        # pip install django flask sqlalchemy psycopg2-binary  # ajusta según tu proyecto
     
     - name: Wait for PostgreSQL
       run: |
@@ -44,9 +41,11 @@ jobs:
           sleep 2
         done
     
-    - name: Run tests
+    - name: Discover and run tests
       run: |
-        # Reemplaza esto con tus comandos reales de test
-        python -m pytest tests/ -v  # o la ruta a tus tests
+        # Buscar todos los archivos de test en el proyecto
+        find . -name "*test*.py" -type f | head -10
+        echo "=== Ejecutando pytest en todo el proyecto ==="
+        python -m pytest --tb=short -v
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/exercises
