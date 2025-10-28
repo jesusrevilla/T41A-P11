@@ -1,3 +1,7 @@
+\connect postgres;
+CREATE DATABASE exercises;
+\connect exercises;
+
 SELECT t.id,
        kv.key    AS columna,
        kv.value  AS valor
