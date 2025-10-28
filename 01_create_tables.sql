@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS datos (
     );
 
 
---\copy datos FROM 'customers.csv' DELIMITER ',' CSV HEADER
+\copy datos FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER
