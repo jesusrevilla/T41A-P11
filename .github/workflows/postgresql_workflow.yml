@@ -48,7 +48,7 @@ jobs:
 
     - name: Insertar datos
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f insertar_datos.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f insert_data.sql
 
     - name: Query data
       run: |
