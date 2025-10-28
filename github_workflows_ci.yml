@@ -1,0 +1,44 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: exercises    # ensure DB is created automatically
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=2s
+          --health-retries=10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..30}; do
+            PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c '\l' && break
+            echo "Waiting for postgres..."
+            sleep 1
+          done
+
+      - name: Ensure exercises DB exists (safe even if POSTGRES_DB set)
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='exercises'" | grep -q 1 || \
+            PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE exercises;"
+
+      - name: Run SQL to populate exercises
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d exercises -f 02_query_data.sql
