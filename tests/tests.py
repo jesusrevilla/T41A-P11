@@ -1,59 +1,39 @@
-name: Run PostgreSQL Tests
+import unittest
+import psycopg2
+import os
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+class TestDatabase(unittest.TestCase):
+    def setUp(self):
+        self.conn = psycopg2.connect(
+            dbname="test_db",
+            user="postgres",
+            password="postgres",
+            host="localhost"
+        )
+        self.cur = self.conn.cursor()
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_DB: test_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    def test_insert_data(self):
+        self.cur.execute("""
+            SELECT * FROM datos
+        """)
+        results = self.cur.fetchall()
+        self.assertTrue(len(results) > 0)
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    def test_pivot_query_results(self):
+        query_file_path = '02_query_data.sql'
+        
+        self.assertTrue(os.path.exists(query_file_path), f"El archivo de consulta no se encontró en {query_file_path}")
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.X'
+        with open(query_file_path, 'r') as f:
+            pivot_query = f.read()
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        self.cur.execute(pivot_query)
+        results = self.cur.fetchall()
+        self.assertTrue(len(results) > 0)
 
-    - name: Wait for PostgreSQL
-      run: |
-        sleep 10
+    def tearDown(self):
+        self.cur.close()
+        self.conn.close()
 
-    - name: Set up database schema and data
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
-
-    - name: Insertar datos
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f insertar_datos.sql
-
-    - name: Query data
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_query_data.sql
-
-    - name: Run tests
-      run: |
-        pytest
+if __name__ == "__main__":
+    unittest.main()
