@@ -48,8 +48,7 @@ jobs:
 
     - name: Insertar datos
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f insertar_datos.sql
-
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f ${{ github.workspace }}/insertar_datos.sql
     - name: Query data
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_query_data.sql
