@@ -45,13 +45,16 @@ jobs:
     - name: Set up database schema and data
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
-    
-    - name: Load CSV data into PostgreSQL
-      env:
-        PGPASSWORD: postgres
-      run: |
-        psql -h localhost -U postgres -d test_db -c "\COPY datos(id, categoria, valor, fecha) FROM 'datos_agregacion_transformacion.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',');"
 
+
+   
     - name: Query data
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d exercises -f 02_query_data.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 02_query_data.sql
+    - name: Run tests
+      run: |
+        pytest
+        
+
+    
