@@ -4,3 +4,6 @@ CREATE TABLE IF NOT EXISTS datos (
         valor NUMERIC,
         fecha DATE
     );
+
+
+--\copy datos FROM 'customers.csv' DELIMITER ',' CSV HEADER
