@@ -1,7 +1,15 @@
-SELECT
-    SUM(CASE WHEN categoria = 'A' THEN valor ELSE 0 END) AS "A",
-    SUM(CASE WHEN categoria = 'B' THEN valor ELSE 0 END) AS "B",
-    SUM(CASE WHEN categoria = 'C' THEN valor ELSE 0 END) AS "C",
-    SUM(CASE WHEN categoria = 'D' THEN valor ELSE 0 END) AS "D"
-FROM
-    datos;
+CREATE TEMP TABLE datos_csv (
+    id INTEGER,
+    categoria TEXT,
+    valor NUMERIC,
+    fecha DATE
+);
+
+\copy datos_csv FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER;
+
+INSERT INTO datos (id, categoria, valor, fecha)
+SELECT id, categoria, valor, fecha
+FROM datos_csv;
+
+SELECT COUNT(*) AS total_registros FROM datos;
+SELECT * FROM datos LIMIT 10;
