@@ -38,16 +38,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-
-
-    - name: Install pandas
-      run: |
-        python -m pip install --upgrade pip
-        pip install pandas
-
-
-
-
     - name: Wait for PostgreSQL
       run: |
         sleep 10
@@ -55,18 +45,6 @@ jobs:
     - name: Set up database schema and data
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 01_create_tables.sql
-
-
-
-    - name: Generate SQL insert file from CSV
-      run: |
-        pip install pandas
-        python generate_insert_sql.py
-
-    - name: Insert data into table
-      run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f insert_data.sql
-
 
 
     - name: Query data
