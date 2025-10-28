@@ -4,3 +4,4 @@ CREATE TABLE IF NOT EXISTS datos (
         valor NUMERIC,
         fecha DATE
     );
+
