@@ -2,6 +2,8 @@
 FROM 'C:/Users/181730/Downloads/datos_agregacion_transformacion.csv'
 DELIMITER ','
 CSV HEADER;
+\copy customers FROM 'customers.csv' DELIMITER ',' CSV HEADER;
+\copy orders FROM 'orders.csv' DELIMITER ',' CSV HEADER;
 
 SELECT categoria, SUM(valor) AS total_valor
 FROM datos
