@@ -1,5 +1,5 @@
 \COPY datos(id, categoria, valor, fecha)
-FROM 'C:/Users/tu_usuario/T41A-P11/datos_agregacion_transformacion.csv'
+FROM 'C:/Users/181730/Downloads/datos_agregacion_transformacion.csv'
 DELIMITER ','
 CSV HEADER;
 
