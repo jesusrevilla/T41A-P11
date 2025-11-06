@@ -1,13 +1,15 @@
 
-/copy  datos FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER;
+\copy  datos FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER;
 
-CREATE EXTENSION IF NOT EXISTS tablefunc;
-SELECT *
-FROM crosstab(
-    SELECT SUM(valor)
-    FROM datos
-    GROUP BY categoria;
-) AS ct(A NUMERIC, B NUMERIC, C NUMERIC, D NUMERIC);
+SELECT categoria, SUM(valor) AS total_valor
+FROM datos
+GROUP BY categoria
+ORDER BY categoria;
 
-
+SELECT
+    SUM(valor) FILTER (WHERE categoria = 'A') AS A,
+    SUM(valor) FILTER (WHERE categoria = 'B') AS B,
+    SUM(valor) FILTER (WHERE categoria = 'C') AS C,
+    SUM(valor) FILTER (WHERE categoria = 'D') AS D
+FROM datos;
 
