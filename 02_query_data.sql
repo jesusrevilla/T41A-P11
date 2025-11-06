@@ -1,4 +1,3 @@
-
 \copy  datos FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER;
 
 SELECT categoria, SUM(valor) AS total_valor
