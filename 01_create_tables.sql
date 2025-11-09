@@ -4,6 +4,3 @@ CREATE TABLE IF NOT EXISTS datos (
         valor NUMERIC,
         fecha DATE
     );
-
-
-\copy datos FROM 'datos_agregacion_transformacion.csv' DELIMITER ',' CSV HEADER
